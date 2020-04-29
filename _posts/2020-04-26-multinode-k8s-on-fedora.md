@@ -9,17 +9,17 @@ thumbnail_path: blog/kubernetes/kubernetes-stacked-color.png
 ---
 
 ## 1. Prerequisites
- * Follow the [Getting Started with Virtualization](guide https://docs.fedoraproject.org/en-US/quick-docs/getting-started-with-virtualization/) until the networking part
+ * Follow the [Getting Started with Virtualization](https://docs.fedoraproject.org/en-US/quick-docs/getting-started-with-virtualization/) until the networking part
  * configure [Bridge Networking on Fedora](https://lukas.zapletalovi.com/2015/09/fedora-22-libvirt-with-bridge.html)
+ * if you are planning to create more than one node, it is easier to fully configure the first node. Then you can clone it before joining it to the cluster: [how to clone virtual machines](https://www.cyberciti.biz/faq/how-to-clone-existing-kvm-virtual-machine-images-on-linux/). 
+  * after cloning you must ssh into the clone and [adapt hostname](https://linuxize.com/post/how-to-change-hostname-on-ubuntu-18-04/) and network settings under `/etc/netplan/`
 
 ## 2. Virtual Machines
  * use the gist to create the virtual machines
  * during installation use the name **k8s-master** on the first machine and **k8s-node0x** on the nodes
  * install `OpenSSH Server` package
  * reboot
- * it is easier to fully configure the first node and cloning it before joining to the cluster: [clone virtual machines](https://www.cyberciti.biz/faq/how-to-clone-existing-kvm-virtual-machine-images-on-linux/). After cloning ssh into it and [adapt hostname](https://linuxize.com/post/how-to-change-hostname-on-ubuntu-18-04/) and ip address under `/etc/netplan/*`
-
-after reboot use `sudo nmap -sP 192.168.1.0/24` to get the ip address of the VM:
+ * call `sudo nmap -sP 192.168.1.0/24` on your host to get the ip address of the newly created VM:
 
 ```
 Nmap scan report for 192.168.1.208
@@ -95,6 +95,7 @@ Host k8s-node03
 
 ## 6. Install the components
 on each VM
+
  * `sudo apt update && sudo apt upgrade`
  * `sudo apt install -qy apt-transport-https software-properties-common`
  * `curl -s https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -`
@@ -107,12 +108,20 @@ on each VM
  * `sudo systemctl start docker`
 
 ## 7. Init k8s master
- * `sudo kubeadm init`
- * copy the output with the token. It will be needed to join the workers
-   * `kubeadm join 192.168.1.201:6443 --token v15nn2.efdd86ctvv2py4sj --discovery-token-ca-cert-hash sha256:1501b51b6052216b206a5f065b50617a3f5bbca57f3b40d60314c04a27e4f7e7`
- * `mkdir -p $HOME/.kube`
- * `sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config`
- * `sudo chown $(id -u):$(id -g) $HOME/.kube/config`
+`sudo kubeadm init`
+
+copy the output with the token. It will be needed to join the workers:
+
+```
+kubeadm join 192.168.1.201:6443 --token v15nn2.efdd86ctvv2py4sj -- \
+discovery-token-ca-cert-hash sha256:1501b51b6052216b206a5f065b50617a3f5bbca57f3b40d60314c04a27e4f7e7
+```
+
+`mkdir -p $HOME/.kube`
+
+`sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config`
+
+`sudo chown $(id -u):$(id -g) $HOME/.kube/config`
 
 ### install networking
 on master install one of the kubernetes network solutions, e.g. Weave Net 
@@ -120,7 +129,10 @@ on master install one of the kubernetes network solutions, e.g. Weave Net
 `kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"`
 
 ## 8. Join the workers to the cluster
-`kubeadm join 192.168.1.201:6443 --token v15nn2.efdd86ctvv2py4sj --discovery-token-ca-cert-hash sha256:1501b51b6052216b206a5f065b50617a3f5bbca57f3b40d60314c04a27e4f7e7`
+```
+kubeadm join 192.168.1.201:6443 --token v15nn2.efdd86ctvv2py4sj \
+--discovery-token-ca-cert-hash sha256:1501b51b6052216b206a5f065b50617a3f5bbca57f3b40d60314c04a27e4f7e7
+```
  
 ## 9. Test your cluster
  * copy the kube config to your host: `scp k8s-master:/home/ibay/.kube/config ~/.kube`
