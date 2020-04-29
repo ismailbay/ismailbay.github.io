@@ -15,7 +15,7 @@ thumbnail_path: blog/kubernetes/kubernetes-stacked-color.png
   * after cloning you must ssh into the clone and [adapt hostname](https://linuxize.com/post/how-to-change-hostname-on-ubuntu-18-04/) and network settings under `/etc/netplan/`
 
 ## 2. Virtual Machines
- * use the gist to create the virtual machines
+ * use [this gist](https://gist.github.com/ismailbay/c87f4b608e007e169bec3c8002834a45) to create the virtual machines
  * during installation use the name **k8s-master** on the first machine and **k8s-node0x** on the nodes
  * install `OpenSSH Server` package
  * reboot
