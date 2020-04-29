@@ -3,7 +3,6 @@ layout: post
 title: "Creating a multi-node Kubernetes Cluster on Fedora"
 tags:
 - Kubernetes
-- Writing
 - Linux
 - DevOps
 thumbnail_path: blog/kubernetes/kubernetes-stacked-color.png

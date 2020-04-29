@@ -3,21 +3,14 @@ url: "https://www.ismailbay.at/writing"
 
 # Internal nav
 nav:
-  writing:
-    all: "/writing"
-    popular: "/writing/popular"
-    tags: "/writing/tags"
+  all: "/"
+  tags: "/tags"
 
 # Bio settings
 name: "Ismail Bay"
 description: "not motivated to blog, but still trying though ..."
 thumbnail_path: "profile-photos/ismailbay-medium.jpg"
-hello_startup_url: "https://www.hello-startup.net/"
 website_repo_url: "https://github.com/ismailbay/ismailbay.github.io"
-atomic_squirrel_url: "https://www.atomic-squirrel.net/"
-gruntwork_url: "https://www.gruntwork.io/"
-terraform_up_and_running_url: "https://www.terraformupandrunning.com/"
-terraform_up_and_running_code_url: "https://github.com/brikis98/terraform-up-and-running-code"
 
 # URLs
 contact_urls:
@@ -42,8 +35,8 @@ contact_urls:
 
 # Jekyll build settings
 paginate: 10
-paginate_path: "/writing/page:num"
-permalink: "/writing/:year/:month/:day/:title/"
+paginate_path: "/page:num"
+permalink: "/:year/:month/:day/:title/"
 sass:
   sass_dir: "/assets/css"
   style: :compressed
