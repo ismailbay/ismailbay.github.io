@@ -1,2 +1,0 @@
-# Ismail Bay Blog
-
